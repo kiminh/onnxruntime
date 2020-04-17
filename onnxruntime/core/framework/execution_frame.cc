@@ -216,7 +216,9 @@ ExecutionFrame::ExecutionFrame(const std::vector<int>& feed_mlvalue_idxs, const 
         }
       }
     }
+  }
 
+  if (session_state.GetExecutionPlan()) {
     // setup group queues
     for (const auto& alloc_plan : session_state.GetExecutionPlan()->allocation_plan) {
       const void* p = alloc_plan.grouped_async_buffers.get();
@@ -341,6 +343,12 @@ Status ExecutionFrame::AllocateMLValueTensorPreAllocateBuffer(OrtValue& ort_valu
 
     // be generous and use the buffer if it's large enough. log a warning though as it indicates a bad model
     if (buffer_num_elements >= required_num_elements) {
+<<<<<<< HEAD
+=======
+      // View Operator is reusing the buffer bigger than the required size.
+      // Disabling warning message for now. The op is in the process of being deprecated.
+#ifndef ENABLE_TRAINING
+>>>>>>> 1475127... Fix when no mem pattern
       LOGS(session_state_.Logger(), WARNING) << message;
     } else {
       return ORT_MAKE_STATUS(ONNXRUNTIME, FAIL, message);
