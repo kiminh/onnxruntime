@@ -461,7 +461,7 @@ Status ExecutionFrame::AllocateAsPerAllocationPlan(OrtValue& ort_value, int ort_
         // Async buffers with fence would be added to tail of its group queue
         bool reuse_from_queue = false;
         auto* queue = FindQueueForGroupedAsyncBuffers(per_alloc_plan.grouped_async_buffers.get());
-        if (!queue->empty()) {
+        if (queue != nullptr && !queue->empty()) {
           int reuse_mlvalue_index = queue->front();
           OrtValue& reuse_value = GetMutableMLValue(reuse_mlvalue_index);
           if (reuse_value.Fence()->CanRelease()) {
